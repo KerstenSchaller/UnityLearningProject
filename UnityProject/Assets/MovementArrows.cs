@@ -5,36 +5,68 @@ using UnityEngine;
 public class MovementArrows : MonoBehaviour
 {
     GameObject cursor;
-    float lookingAngle = 0;
+    float lookingAngle;
 
-    float turningSpeed = 3;
+    float turningSpeed = 1;
     float speed = 3;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-       cursor = GameObject.FindGameObjectWithTag("Player");
+        lookingAngle  = Random.Range(0, 359);
+        cursor = GameObject.FindGameObjectWithTag("Player");
     }
-
-
 
     // Update is called once per frame
     void Update()
     {        
-        // turn immidiately 
-        //lookAt2D(cursor);
- 
 
-        // turn incremental
-        turnToTarget(cursor.transform.position);
 
         if (Input.GetMouseButton(0) == true)
         {
             drawLine();//from arrow to cursor
+            
+            // turn incremental
+            turnToTarget(cursor.transform.position);
         }
+
+
+
+        move();
+
+    }
+
+    void move()
+    {
+        //check boundaries
+        Camera cam = Camera.main;
+        var width  = 1/(cam.WorldToViewportPoint(new Vector3(1,1,0)).x - 0.5f);
+        var height  = 1/(cam.WorldToViewportPoint(new Vector3(1,1,0)).y - 0.5f);
+        Debug.Log("w: " + width + " h: " + height);
+        
+        if( transform.position.x >  width/2 )
+        {
+            transform.position = new Vector3(-width/2, transform.position.y ); 
+        }
+        if( transform.position.x <  -width/2 )
+        {
+            transform.position = new Vector3(width/2, transform.position.y );
+        }
+        if( transform.position.y >  height/2 )
+        {
+            transform.position = new Vector3(transform.position.x, -height/2 ); 
+        }
+        if( transform.position.y <  -height/2 )
+        {
+            transform.position = new Vector3(transform.position.x, height/2 ); 
+        }
+        
+
+        
         //move Forward
         transform.Translate(Vector3.up * speed * Time.deltaTime);
-
     }
 
     void lookAt2D(GameObject target)
@@ -142,7 +174,7 @@ public class MovementArrows : MonoBehaviour
         myLine.AddComponent<LineRenderer>();
         LineRenderer lr = myLine.GetComponent<LineRenderer>();
         //lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-        lr.SetColors(Color.black, Color.black);
+        //lr.SetColors(Color.black, Color.black);
         lr.SetWidth(0.01f, 0.1f);
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);

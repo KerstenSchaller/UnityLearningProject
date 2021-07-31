@@ -7,8 +7,10 @@ public class changeColor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        doChange();
         
-        StartCoroutine("DoStuff");
+        
+        //StartCoroutine("DoStuff");
     }
 
     // Update is called once per frame
@@ -28,7 +30,6 @@ public class changeColor : MonoBehaviour
 
     void doChange()
     {
-
         gameObject.GetComponent<SpriteRenderer>().color = ColorProvider.getColor();
     }
 }
